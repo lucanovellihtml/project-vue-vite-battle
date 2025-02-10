@@ -8,7 +8,18 @@ import LogBattle from "./components/logBattle.vue";
 
 export default {
 
-  components: { HeaderGame, Player, ButtonControl, LogBattle }
+  // define child compontens
+  components: { HeaderGame, Player, ButtonControl, LogBattle },
+
+  setup() {
+
+    const round = ref("0");
+
+    return {
+      round
+    }
+
+  }
 
 }
 
@@ -20,7 +31,7 @@ export default {
   <header>
 
     <!-- header component -->
-    <HeaderGame></HeaderGame>
+    <HeaderGame :round="round"></HeaderGame>
 
   </header>
 
