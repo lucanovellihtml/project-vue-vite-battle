@@ -1,5 +1,5 @@
 <template>
-    <button :class="classes">{{ title }}</button>
+    <button type="button" :class="classes" :disabled="disabled">{{ title }}</button>
 </template>
 
 
@@ -24,7 +24,14 @@ export default {
             validator(value) {
                 return ["primary", "danger", "success"].includes(value);
             }
+        },
+
+        //props disabled
+        disabled: {
+            type: Boolean,
+            required: false
         }
+
     },
 
     emits: ["click-button"],
