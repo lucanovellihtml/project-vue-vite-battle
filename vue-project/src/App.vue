@@ -1,10 +1,15 @@
 <script>
 
-import { ref } from "vue"
+import { ref, computed } from "vue"
 import HeaderGame from "./components/HeaderGame.vue";
 import Player from "./components/Player.vue";
 import ButtonControl from "./components/ButtonControl.vue";
-import LogBattle from "./components/logBattle.vue";
+import LogBattle from "./components/LogBattle.vue";
+
+//function random
+const getRandomValue = (min, max) => {
+  return Math.floor(Math.random() * (max - min) + min);
+}
 
 export default {
 
@@ -22,10 +27,115 @@ export default {
     //variable health player total
     const healthPlayerTotal = ref(100);
 
+    //variable attack enemy
+    const attackEnemy = ref();
+
+    //variable attack player
+    const attackPlayer = ref();
+
+    //variable medikit
+    const medikit = 20;
+
+    //function attack player
+    const handleClickAttack = () => {
+      //console.log("Hai cliccato attack");
+      attackPlayer.value = getRandomValue(1, 20);
+
+      if (healthEnemyTotal.value - attackPlayer.value <= 0)
+        healthEnemyTotal.value = 0;
+      else
+        healthEnemyTotal.value -= attackPlayer.value;
+
+      //console.log("Attacco player ->", attackPlayer.value);
+      //recordLog("player", "attack", attackPlayer.value);
+
+      actionAttackEnemy();
+      round.value++;
+    }
+
+    //function super attack player
+    const handleClickSuperAttack = () => {
+      //console.log("Hai cliccato super attack");
+      attackPlayer.value = getRandomValue(10, 40);
+
+      if (healthEnemyTotal.value - attackPlayer.value <= 0)
+        healthEnemyTotal.value = 0;
+      else
+        healthEnemyTotal.value -= attackPlayer.value;
+
+      console.log("Super attacco player ->", attackPlayer);
+      //recordLog("player", "super attack", attackPlayer.value);
+
+      actionAttackEnemy();
+      round.value++;
+    }
+
+    //function medikit player
+    const handleClickMedikit = () => {
+      //console.log("Hai cliccato medikit");
+      if (healthPlayerTotal.value + medikit > 100)
+        healthPlayerTotal.value = 100;
+      else
+        healthPlayerTotal.value += medikit;
+
+      round.value++;
+      //console.log("Vita medicata -> ", healthPlayerTotal.value);
+      //recordLog("player", "medikit", medikit);
+
+      actionAttackEnemy();
+    }
+
+    //function gamer over player
+    const handleClickGameOver = () => {
+      //console.log("Hai cliccato game over");
+      healthPlayerTotal.value = 0;
+      healthPlayerNow.value = "width:" + healthPlayerTotal.value + "%";
+      messaggeWinner.value = "Gamer over";
+
+      //recordLog("player", "gamer over", healthPlayerTotal.value);
+    }
+
+    //function attack enemy
+    const actionAttackEnemy = () => {
+      //console.log("Il nemico ha attaccato");
+      attackEnemy.value = getRandomValue(1, 40);
+
+      if (healthPlayerTotal.value - attackEnemy.value <= 0)
+        healthPlayerTotal.value = 0;
+      else
+        healthPlayerTotal.value -= attackEnemy.value;
+
+      //console.log("Attacco nemico ->", attackEnemy.value);
+
+      //recordLog("enemy", "attack", attackEnemy.value);
+    }
+
+    //computed to disable or active button super attack
+    const attackEnemyDisabled = computed(() => {
+      if (round.value < 3)
+        return true
+      else
+        return false
+    })
+
+    //computed to disable or active button medikit
+    const actionMedikitDisabled = computed(() => {
+      if (round.value < 3 || healthPlayerTotal.value >= 50)
+        return true
+      else
+        return false
+    })
+
     return {
       round,
       healthEnemyTotal,
-      healthPlayerTotal
+      healthPlayerTotal,
+      handleClickAttack,
+      handleClickSuperAttack,
+      handleClickMedikit,
+      handleClickGameOver,
+      actionMedikitDisabled,
+      attackEnemyDisabled
     }
 
   }
@@ -61,12 +171,13 @@ export default {
 
         <!-- button attack -->
         <div class="col-12 col-sm-6 col-md-3 text-center">
-          <ButtonControl title="Attack" color="primary" />
+          <ButtonControl @click="handleClickAttack" title="Attack" color="primary" />
         </div>
 
         <!-- button attack special -->
         <div class="col-12 col-sm-6 col-md-3 text-center">
-          <ButtonControl title="Special Attack" color="primary" />
+          <ButtonControl @click="handleClickSuperAttack" title="Special Attack" color="primary"
+            :disabled="attackEnemyDisabled" />
         </div>
 
       </div>
@@ -76,12 +187,13 @@ export default {
 
         <!-- button meidkit -->
         <div class="col-12 col-sm-6 col-md-3 text-center">
-          <ButtonControl title="Medikit" color="success" />
+          <ButtonControl @click="handleClickMedikit" title="Medikit" color="success"
+            :disabled="actionMedikitDisabled" />
         </div>
 
         <!-- button gamer over -->
         <div class="col-12 col-sm-6 col-md-3 text-center">
-          <ButtonControl title="Gamer Over!" color="danger" />
+          <ButtonControl @click="handleClickGameOver" title="Gamer Over!" color="danger" />
         </div>
 
       </div>
