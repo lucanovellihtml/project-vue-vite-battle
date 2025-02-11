@@ -12,7 +12,7 @@
                 <div>
                     <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="100"
                         aria-valuemin="0" aria-valuemax="100">
-                        <div class="progress-bar bg-danger" style="width: 100%"></div>
+                        <div class="progress-bar bg-danger" :style="healthBarStyle"></div>
                     </div>
                 </div>
 
@@ -25,7 +25,7 @@
 
 <script>
 
-import { ref } from "vue"
+import { ref, computed } from "vue"
 
 export default {
 
@@ -47,8 +47,13 @@ export default {
 
     setup(props) {
 
-        return {
+        //computed to manipulate health bar
+        const healthBarStyle = computed(() => {
+            return { width: props.healt + "%" }
+        })
 
+        return {
+            healthBarStyle
         }
 
     }
