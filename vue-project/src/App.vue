@@ -13,10 +13,19 @@ export default {
 
   setup() {
 
+    //variable count round
     const round = ref("0");
 
+    //variable health enemy total
+    const healthEnemyTotal = ref(100);
+
+    //variable health player total
+    const healthPlayerTotal = ref(100);
+
     return {
-      round
+      round,
+      healthEnemyTotal,
+      healthPlayerTotal
     }
 
   }
@@ -39,10 +48,10 @@ export default {
   <main>
 
     <!-- section enemy -->
-    <Player title="Enemy"></Player>
+    <Player title="Enemy" :healt="healthEnemyTotal"></Player>
 
     <!-- section player -->
-    <Player title="You"></Player>
+    <Player title="You" :healt="healthPlayerTotal"></Player>
 
     <!-- section controls -->
     <section class="container-fluid mt-5 d-flex flex-column gap-4">
