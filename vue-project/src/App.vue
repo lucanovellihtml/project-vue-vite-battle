@@ -1,10 +1,11 @@
 <script>
 
-import { ref, computed } from "vue"
+import { ref, computed, watch } from "vue"
 import HeaderGame from "./components/HeaderGame.vue";
 import Player from "./components/Player.vue";
 import ButtonControl from "./components/ButtonControl.vue";
 import LogBattle from "./components/LogBattle.vue";
+import MessageEndGame from "./components/MessageEndGame.vue";
 
 //function random
 const getRandomValue = (min, max) => {
@@ -14,9 +15,15 @@ const getRandomValue = (min, max) => {
 export default {
 
   // define child compontens
-  components: { HeaderGame, Player, ButtonControl, LogBattle },
+  components: { HeaderGame, Player, ButtonControl, LogBattle, MessageEndGame },
 
   setup() {
+
+    //array log
+    const logMessages = ref([]);
+
+    //variable message end game
+    const message = ref();
 
     //variable count round
     const round = ref("0");
@@ -63,8 +70,8 @@ export default {
       else
         healthEnemyTotal.value -= attackPlayer.value;
 
-      console.log("Super attacco player ->", attackPlayer);
-      //recordLog("player", "super attack", attackPlayer.value);
+      //console.log("Super attacco player ->", attackPlayer);
+      recordLog("player", "super attack", attackPlayer.value);
 
       actionAttackEnemy();
       round.value++;
@@ -80,7 +87,7 @@ export default {
 
       round.value++;
       //console.log("Vita medicata -> ", healthPlayerTotal.value);
-      //recordLog("player", "medikit", medikit);
+      recordLog("player", "medikit", medikit);
 
       actionAttackEnemy();
     }
@@ -90,9 +97,9 @@ export default {
       //console.log("Hai cliccato game over");
       healthPlayerTotal.value = 0;
       healthPlayerNow.value = "width:" + healthPlayerTotal.value + "%";
-      messaggeWinner.value = "Gamer over";
+      message.value = "Gamer over";
 
-      //recordLog("player", "gamer over", healthPlayerTotal.value);
+      recordLog("player", "gamer over", healthPlayerTotal.value);
     }
 
     //function attack enemy
@@ -107,7 +114,7 @@ export default {
 
       //console.log("Attacco nemico ->", attackEnemy.value);
 
-      //recordLog("enemy", "attack", attackEnemy.value);
+      recordLog("enemy", "attack", attackEnemy.value);
     }
 
     //computed to disable or active button super attack
@@ -126,6 +133,39 @@ export default {
         return false
     })
 
+    //watch to check if winner is enemy
+    watch(healthEnemyTotal, (healthEnemyTotal, prevHealthEnemyTotal) => {
+
+      if (healthEnemyTotal.value <= 0 && healthPlayerTotal.value <= 0) {
+        message.value = "Pareggio";
+      }
+      else if (healthPlayerTotal.value <= 0) {
+        message.value = "Game Over";
+      }
+
+    })
+
+    //watch to check if winner is player
+    watch(healthPlayerTotal, (healthPlayerTotal, prevHealthPlayerTotal) => {
+
+      if (healthPlayerTotal.value <= 0 && healthEnemyTotal.value <= 0) {
+        message.value = "Pareggio";
+      }
+      else if (healthEnemyTotal.value <= 0) {
+        message.value = "Hai vinto";
+      }
+
+    })
+
+    //function log
+    const recordLog = (who, what, value) => {
+      logMessages.value.unshift({
+        actionBy: who,
+        actionType: what,
+        actionValue: value
+      })
+    }
+
     return {
       round,
       healthEnemyTotal,
@@ -135,7 +175,9 @@ export default {
       handleClickMedikit,
       handleClickGameOver,
       actionMedikitDisabled,
-      attackEnemyDisabled
+      attackEnemyDisabled,
+      message,
+      recordLog
     }
 
   }
@@ -157,11 +199,15 @@ export default {
   <!-- main -->
   <main>
 
+    <!-- section messagge end game -->
+    <MessageEndGame v-if="message" :message="message" />
+
+
     <!-- section enemy -->
-    <Player title="Enemy" :healt="healthEnemyTotal"></Player>
+    <Player title="Enemy" :healt="healthEnemyTotal" />
 
     <!-- section player -->
-    <Player title="You" :healt="healthPlayerTotal"></Player>
+    <Player title="You" :healt="healthPlayerTotal" />
 
     <!-- section controls -->
     <section class="container-fluid mt-5 d-flex flex-column gap-4">
