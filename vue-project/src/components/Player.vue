@@ -6,13 +6,13 @@
             <div class="col-12 col-sm-6 border border-white shadow-lg py-3 text-center">
 
                 <!-- title -->
-                <h2 class="fs-5 fw-bold">{{ title }}</h2>
+                <h2 class="fs-5 fw-bold">{{ title }} : {{ healt }}</h2>
 
                 <!-- healthbar-->
                 <div>
                     <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="100"
                         aria-valuemin="0" aria-valuemax="100">
-                        <div class="progress-bar bg-danger" style="width: 100%;"></div>
+                        <div class="progress-bar bg-danger" style="width: 100%"></div>
                     </div>
                 </div>
 
@@ -29,16 +29,23 @@ import { ref } from "vue"
 
 export default {
 
+    //name component
+    name: "Player",
+
     props: {
         title: {
             type: String,
             required: true,
             default: "Player Name"
+        },
+        healt: {
+            type: Number,
+            required: true,
+            default: 0
         }
     },
 
     setup(props) {
-
 
         return {
 
