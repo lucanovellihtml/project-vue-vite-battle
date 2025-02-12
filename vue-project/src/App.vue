@@ -12,6 +12,7 @@ const getRandomValue = (min, max) => {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
+
 export default {
 
   // define child compontens
@@ -33,6 +34,9 @@ export default {
 
     //variable health player total
     const healthPlayerTotal = ref(100);
+
+    //variableplayer now
+    const healthNow = ref(100);
 
     //variable attack enemy
     const attackEnemy = ref();
@@ -96,7 +100,7 @@ export default {
     const handleClickGameOver = () => {
       //console.log("Hai cliccato game over");
       healthPlayerTotal.value = 0;
-      healthPlayerNow.value = "width:" + healthPlayerTotal.value + "%";
+      healthNow.value = "width:" + healthPlayerTotal.value + "%";
       message.value = "Gamer over";
 
       recordLog("player", "gamer over", healthPlayerTotal.value);
@@ -137,7 +141,7 @@ export default {
     watch(healthEnemyTotal, (healthEnemyTotal, prevHealthEnemyTotal) => {
 
       if (healthEnemyTotal.value <= 0 && healthPlayerTotal.value <= 0) {
-        message.value = "Pareggio";
+        message.value = "Tie";
       }
       else if (healthPlayerTotal.value <= 0) {
         message.value = "Game Over";
@@ -149,10 +153,10 @@ export default {
     watch(healthPlayerTotal, (healthPlayerTotal, prevHealthPlayerTotal) => {
 
       if (healthPlayerTotal.value <= 0 && healthEnemyTotal.value <= 0) {
-        message.value = "Pareggio";
+        message.value = "Tie";
       }
       else if (healthEnemyTotal.value <= 0) {
-        message.value = "Hai vinto";
+        message.value = "Winner";
       }
 
     })
@@ -166,6 +170,11 @@ export default {
       })
     }
 
+    //function refresh page
+    function refreshPage() {
+      window.location.reload();
+    }
+
     return {
       round,
       healthEnemyTotal,
@@ -176,6 +185,7 @@ export default {
       handleClickGameOver,
       actionMedikitDisabled,
       attackEnemyDisabled,
+      refreshPage,
       message,
       recordLog
     }
@@ -200,7 +210,7 @@ export default {
   <main>
 
     <!-- section messagge end game -->
-    <MessageEndGame v-if="message" :message="message" />
+    <MessageEndGame v-if="message" :message="message" @click-reset="refreshPage" />
 
 
     <!-- section enemy -->
