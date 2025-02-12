@@ -9,6 +9,9 @@
                 <!-- title -->
                 <h2 class="fs-5 fw-bold">{{ message }}</h2>
 
+                <!-- button -->
+                <button type="button" class="w-50 btn btn-warning" @click="handleClickReset">Reset</button>
+
             </div>
         </div>
     </section>
@@ -19,7 +22,11 @@
 
 import { ref } from "vue"
 
+
 export default {
+
+    //name component
+    name: "MessageEndGame",
 
     props: {
 
@@ -31,11 +38,18 @@ export default {
 
     },
 
-    setup(props) {
+    //emit event
+    emits: ["click-reset"],
 
+    setup(props, ctx) {
+
+        //function refresh page when game is finished
+        const handleClickReset = () => {
+            ctx.emit("click-reset");
+        }
 
         return {
-
+            handleClickReset
         }
 
     }
