@@ -5,7 +5,7 @@
             <div class="col p-4">
 
                 <!-- title -->
-                <h1 class="fs-1 fw-bold">Game | {{ round }}</h1>
+                <h1 class="fs-1 fw-bold">Game | Round: {{ round }}</h1>
 
             </div>
         </div>
