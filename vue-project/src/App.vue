@@ -211,7 +211,9 @@ export default {
   <main>
 
     <!-- section messagge end game -->
-    <MessageEndGame v-if="message" :message="message" @click-reset="refreshPage" />
+    <template v-if="message">
+      <MessageEndGame :message="message" @click-reset="refreshPage" />
+    </template>
 
     <!-- section enemy -->
     <Player title="Enemy" :healt="healthEnemyTotal" />
