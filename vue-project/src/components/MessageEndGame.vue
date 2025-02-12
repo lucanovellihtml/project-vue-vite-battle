@@ -10,7 +10,7 @@
                 <h2 class="fs-5 fw-bold">{{ message }}</h2>
 
                 <!-- button -->
-                <button type="button" class="w-50 btn btn-warning" @click="handleClickReset">Reset</button>
+                <button type="button" class="w-25 btn btn-warning" @click="handleClickReset">Reset</button>
 
             </div>
         </div>
