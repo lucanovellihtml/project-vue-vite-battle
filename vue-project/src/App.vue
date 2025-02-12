@@ -58,7 +58,7 @@ export default {
         healthEnemyTotal.value -= attackPlayer.value;
 
       //console.log("Attacco player ->", attackPlayer.value);
-      //recordLog("player", "attack", attackPlayer.value);
+      recordLog("player", "attack", attackPlayer.value);
 
       actionAttackEnemy();
       round.value++;
@@ -187,7 +187,8 @@ export default {
       attackEnemyDisabled,
       refreshPage,
       message,
-      recordLog
+      recordLog,
+      logMessages
     }
 
   }
@@ -212,7 +213,6 @@ export default {
     <!-- section messagge end game -->
     <MessageEndGame v-if="message" :message="message" @click-reset="refreshPage" />
 
-
     <!-- section enemy -->
     <Player title="Enemy" :healt="healthEnemyTotal" />
 
@@ -220,44 +220,46 @@ export default {
     <Player title="You" :healt="healthPlayerTotal" />
 
     <!-- section controls -->
-    <section class="container-fluid mt-5 d-flex flex-column gap-4">
+    <template v-if="!message">
+      <section class="container-fluid mt-5 d-flex flex-column gap-4">
 
-      <!-- row buttons attack -->
-      <div class="row justify-content-center gap-4 gap-sm-0">
+        <!-- row buttons attack -->
+        <div class="row justify-content-center gap-4 gap-sm-0">
 
-        <!-- button attack -->
-        <div class="col-12 col-sm-6 col-md-3 text-center">
-          <ButtonControl @click="handleClickAttack" title="Attack" color="primary" />
+          <!-- button attack -->
+          <div class="col-12 col-sm-6 col-md-3 text-center">
+            <ButtonControl @click="handleClickAttack" title="Attack" color="primary" />
+          </div>
+
+          <!-- button attack special -->
+          <div class="col-12 col-sm-6 col-md-3 text-center">
+            <ButtonControl @click="handleClickSuperAttack" title="Special Attack" color="primary"
+              :disabled="attackEnemyDisabled" />
+          </div>
+
         </div>
 
-        <!-- button attack special -->
-        <div class="col-12 col-sm-6 col-md-3 text-center">
-          <ButtonControl @click="handleClickSuperAttack" title="Special Attack" color="primary"
-            :disabled="attackEnemyDisabled" />
+        <!-- row buttons medikit/gamer over -->
+        <div class="row justify-content-center gap-4 gap-sm-0">
+
+          <!-- button meidkit -->
+          <div class="col-12 col-sm-6 col-md-3 text-center">
+            <ButtonControl @click="handleClickMedikit" title="Medikit" color="success"
+              :disabled="actionMedikitDisabled" />
+          </div>
+
+          <!-- button gamer over -->
+          <div class="col-12 col-sm-6 col-md-3 text-center">
+            <ButtonControl @click="handleClickGameOver" title="Gamer Over!" color="danger" />
+          </div>
+
         </div>
 
-      </div>
-
-      <!-- row buttons medikit/gamer over -->
-      <div class="row justify-content-center gap-4 gap-sm-0">
-
-        <!-- button meidkit -->
-        <div class="col-12 col-sm-6 col-md-3 text-center">
-          <ButtonControl @click="handleClickMedikit" title="Medikit" color="success"
-            :disabled="actionMedikitDisabled" />
-        </div>
-
-        <!-- button gamer over -->
-        <div class="col-12 col-sm-6 col-md-3 text-center">
-          <ButtonControl @click="handleClickGameOver" title="Gamer Over!" color="danger" />
-        </div>
-
-      </div>
-
-    </section>
+      </section>
+    </template>
 
     <!-- section log -->
-    <LogBattle title="Battle log" />
+    <LogBattle title="Battle log" :logs="logMessages" />
 
   </main>
 
